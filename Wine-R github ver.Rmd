@@ -1,0 +1,54 @@
+---
+title: "Interterm"
+author: "Katherine Li"
+date: "10/16/2019"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(ggplot2)
+wine <- read_csv('winemag-data-130k-v2.csv')
+```
+
+```{r}
+winetop <- wine %>%
+  group_by(variety) %>%
+  summarise(number = n())%>%
+  arrange(desc(number))
+
+wine %>%
+  filter(variety == 'Pinot Noir' | variety == 'Chardonnay' | variety == 'Cabernet Sauvignon' | variety == 'Red Blend' | variety == 'Bordeaux-style Red Blend' | variety == 'Riesling' | variety == 'Sauvignon Blanc'| variety == 'Syrah' | variety == 'Rosé' | variety == 'Merlot' ) %>%
+  filter(is.na(price) != TRUE) %>%
+  group_by(variety) %>%
+  summarize(avg_price_by_variety=mean(price)) %>%
+  arrange(desc(avg_price_by_variety)) %>%
+  ggplot(.,mapping=aes(variety, avg_price_by_variety)) +
+  geom_bar(stat="identity", fill="darkred") +
+  scale_y_continuous("Average Price ($)", breaks=seq(0,60, by=10))+
+  ggtitle("Average Price per Bottle",
+          subtitle = "Top 10 Varieties") +
+  theme_grey() +
+  coord_flip() +
+  theme(panel.grid = element_blank(),
+        panel.background = element_blank(),
+        axis.title.y = element_blank())
+  
+```
+
+```{r}
+winenewnew <- wine %>%
+  filter(variety == 'Pinot Noir' | variety == 'Chardonnay' | variety == 'Cabernet Sauvignon' | variety == 'Red Blend' | variety == 'Bordeaux-style Red Blend' | variety == 'Riesling' | variety == 'Sauvignon Blanc'| variety == 'Syrah' | variety == 'Rosé' | variety == 'Merlot' ) %>%
+  filter(is.na(points) != TRUE) %>%
+  group_by(variety) %>%
+  summarize(avg_point_by_variety=mean(points)) %>%
+  arrange(desc(avg_point_by_variety)) %>%
+  ggplot(.,mapping=aes(variety, avg_point_by_variety)) +
+  geom_bar(stat="identity", fill="darkblue") +
+  scale_y_continuous("Average Rating", breaks=seq(0,60, by=10))+
+  ggtitle("Average Rating per Bottle",
+          subtitle = "Top 10 Varieties") +
+  theme_grey() +
+  coord_flip() +
+  theme(panel.grid = element_blank(),
+        panel.background = element_blank(),
+        axis.title.y = element_blank())
